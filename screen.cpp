@@ -35,10 +35,6 @@ void Screen::clear(){
 void Screen::apply(){
     display.update();
 }
-void Screen::partial_apply(int x,int y,int width,int height){
-    display.updateWindow(x, y, width, height, false);
-}
-
 void Screen::font_size(int size){
     switch(size){
         case 1:
@@ -66,7 +62,7 @@ void Screen::print_center(const char *buf, int x, int y)
 }
 
 //Public Methods :
-void Screen::display_time(int min, int hour){
+void Screen::display_time(int min, int hour,bool point){
     font_size(BIG_FONT);                // set font size
     char buffer[5];
     //Convert to string the data
@@ -86,12 +82,8 @@ void Screen::display_time(int min, int hour){
         buffer[4]=String(min)[1];
     }
     print_center(buffer,display.width()/2,30+24);
-}
-void Screen::display_dot(void){
     //The point need to be printed at the right
-    display.setCursor(200,30+24);
-    display.print('.');
-    display.updateWindow(200,30+24,10,10,false);
+    if(point){display.print('.');}
 }
 
 void Screen::display_planet(int x, int y, int size, int orbit){

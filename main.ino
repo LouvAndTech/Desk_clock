@@ -64,36 +64,32 @@ void setup()
 void loop()
 {
   static T lastT = {-1,-1,-1,-1};
-  static bool pass30S = false;
+  static int needPoint = 0;
 
   timeM.update_time();
+  needPoint = (timeM.second > 30)?((needPoint==2)?2:1):0; // 1 need one | 2 already done | 0 don't need
   
   //Each 30s : 
-  if (lastT.min != timeM.min || (timeM.second>=30 && !pass30S)){
-    
-    screen.display_dot();
-    pass30S = (timeM.second>=30)?true:false;
-
+  if (lastT.min != timeM.min || needPoint==1){
     //Each minutes
     if(lastT.min != timeM.min ){
       //cleat the screen
       screen.clear();
+
       //Calculate the position of the planets
       earth.calculatePos(365*24,timeM.day, timeM.month, timeM.hour);
       earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
       moon.calculatePos(27*24,timeM.day,timeM.month, timeM.hour);
       moon.addOffset(earth.x,earth.y);
-      //Display the planets
       screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
       screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
       screen.display_planet(moon.x,moon.y,5,0);
-
-      //Display the time
-      screen.display_time(timeM.min, timeM.hour);
-
-      //apply the changes
-      screen.apply();
     }
+
+    screen.display_time(timeM.min, timeM.hour,(needPoint==1)?true:false);
+    needPoint = (needPoint==1)?2:0;
+
+    screen.apply();
   }
   
   //update the lastT

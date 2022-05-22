@@ -15,7 +15,7 @@ class Screen{
          * @param min 
          * @param hour 
          */
-        void display_time(int,int);
+        void display_time(int,int,bool);
 
         /**
          * @brief Add the dot to the screen
