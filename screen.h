@@ -15,12 +15,12 @@ class Screen{
          * @param min 
          * @param hour 
          */
-        void display_time(int,int,bool);
+        void display_time(int,int);
 
         /**
          * @brief Add the dot to the screen
          */
-        void display_dot(void);
+        void display_dot_P(void);
         
         /**
          * @brief add a planet to the screen

@@ -4,21 +4,22 @@
 #define ANGLE_OFFSET M_PI_2
 
 //Constructor
-Planet::Planet(int orbitRadius){
+Planet::Planet(int orbitRadius,int nbHourMax){
     r = orbitRadius;
+    tempsRevolution = nbHourMax;
     x = 0;
     y = 0;
     angle = 0;
 }
 
-void Planet::calculatePos(int nbHourMax,int day, int month,int hour){
+void Planet::calculatePos(int ,int day, int month,int hour){
     #if DEV
     Serial.println("Calculating position...");
     #endif
     //calculate the day of the year
     int doy = dayOfYear(day,month,hour);
     //Calculate the angle with a *100 multiplier
-    angle = (int)(((((doy*24.+hour)/nbHourMax)*2.*M_PI)+ANGLE_OFFSET)*100);
+    angle = (int)(((((doy*24.+hour)/tempsRevolution)*2.*M_PI)+ANGLE_OFFSET)*100);
     //Calculate the x and y
     x = (int)(r*cos(angle/100.));
     y = (int)(r*sin(angle/100.));

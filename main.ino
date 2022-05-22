@@ -14,6 +14,8 @@
 #define BAUDRATE 115200
 #define ORBIT_RADIU_EARTH 60 //in pixel
 #define ORBIT_RADIU_MOON 20 //in pixel
+#define TEMPS_REVOLUTION_EARTH 365 //in days
+#define TEMPS_REVOLUTION_MOON 27 //in days
 #define CENTER_PLANET_X 150
 #define CENTER_PLANET_Y 250
 
@@ -30,8 +32,8 @@ typedef struct{
 
 Screen screen;
 TimeM timeM;
-Planet earth(ORBIT_RADIU_EARTH);
-Planet moon(ORBIT_RADIU_MOON);
+Planet earth(ORBIT_RADIU_EARTH,TEMPS_REVOLUTION_EARTH*24);
+Planet moon(ORBIT_RADIU_MOON,TEMPS_REVOLUTION_MOON*24);
 
 
 void setup()
@@ -64,32 +66,47 @@ void setup()
 void loop()
 {
   static T lastT = {-1,-1,-1,-1};
-  static int needPoint = 0;
+  static bool pass30s = false;
+  static bool need_refresh = false;
 
   timeM.update_time();
-  needPoint = (timeM.second > 30)?((needPoint==2)?2:1):0; // 1 need one | 2 already done | 0 don't need
-  
-  //Each 30s : 
-  if (lastT.min != timeM.min || needPoint==1){
-    //Each minutes
-    if(lastT.min != timeM.min ){
-      //cleat the screen
-      screen.clear();
 
+  //Each 30s : 
+  if (lastT.min != timeM.min || (timeM.second>=30 && !pass30s)){
+    //each minutes
+    if(lastT.min != timeM.min ){
+      //clear the screen
+      screen.clear();
+      //display the time
+      screen.display_time(timeM.min, timeM.hour);
       //Calculate the position of the planets
-      earth.calculatePos(365*24,timeM.day, timeM.month, timeM.hour);
+      earth.calculatePos(timeM.day, timeM.month, timeM.hour);
       earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
-      moon.calculatePos(27*24,timeM.day,timeM.month, timeM.hour);
+      moon.calculatePos(timeM.day,timeM.month, timeM.hour);
       moon.addOffset(earth.x,earth.y);
+      //display the planets
       screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
       screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
       screen.display_planet(moon.x,moon.y,5,0);
+      //apply the buffer onto the screen
+      need_refresh = true;
     }
 
-    screen.display_time(timeM.min, timeM.hour,(needPoint==1)?true:false);
-    needPoint = (needPoint==1)?2:0;
-
+    //each 30S if where in a +30 situation
+    if (timeM.second>=30){
+      //Display the dot and register
+      pass30s = true;
+      //The "_P" mean that this function refresh by herself a partial part of the screen
+      screen.display_dot_P();
+    }else{
+      //else keep the pass at 0 
+      pass30s = false;
+    }
+  }
+  if (need_refresh){
+    //apply the buffer onto the screen
     screen.apply();
+    need_refresh = false;
   }
   
   //update the lastT

@@ -11,7 +11,7 @@ class Planet{
         int x; //largeur
         int y; //hauteur
 
-        Planet(int);
+        Planet(int,int);
 
         /**
          * @brief Calculates the position of the planet
@@ -27,6 +27,7 @@ class Planet{
     private:
         int angle; // Angle with a *100 multiplier
         int r; // The radius of the orbit
+        int tempsRevolution; //
 
         bool isLeapYear(int);
         int dayOfYear(int,int,int);

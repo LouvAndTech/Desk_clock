@@ -24,7 +24,11 @@ Screen::Screen(void){
 
 //Private Methods :
 void Screen::init(int baudrate){
+    #if DEV
     display.init(baudrate); // enable diagnostic output on Serial
+    #else
+    display.init();
+    #endif
     display.setRotation(3); //Portrait mode
     display.setTextColor(GxEPD_BLACK);  //Set color to black cause that's the only one
 }
@@ -33,6 +37,9 @@ void Screen::clear(){
 }
 void Screen::apply(){
     display.display();
+}
+void Screen::partial_apply(int x, int y, int w, int h){
+    display.displayWindow(x,y,w,h);
 }
 void Screen::font_size(int size){
     switch(size){
@@ -61,7 +68,7 @@ void Screen::print_center(const char *buf, int x, int y)
 }
 
 //Public Methods :
-void Screen::display_time(int min, int hour,bool point){
+void Screen::display_time(int min, int hour){
     font_size(BIG_FONT);                // set font size
     char buffer[5];
     //Convert to string the data
@@ -81,8 +88,16 @@ void Screen::display_time(int min, int hour,bool point){
         buffer[4]=String(min)[1];
     }
     print_center(buffer,display.width()/2,30+24);
-    //The point need to be printed at the right
-    if(point){display.print('.');}
+}
+void Screen::display_dot_P(void){
+    //The point need to be printed at the right of the clock
+    int16_t x1, y1;
+    uint16_t w, h;
+    display.getTextBounds("00:00",display.width()/2,30+24, &x1, &y1, &w, &h); //calc width of new string
+    display.setCursor(display.width()/2+(w/2), 30+24);
+    display.print('.');
+    partial_apply(display.width()/2+(w/2), 30+24,20,20);
+    display.powerOff();
 }
 
 void Screen::display_planet(int x, int y, int size, int orbit){
