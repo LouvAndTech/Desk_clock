@@ -24,19 +24,35 @@
 const char* ssid       = "Livebox-6858";
 const char* password   = "xVdxfd4CVHGTHD82Hx";
 
+//Save the last Time we pass the boucle
 typedef struct{
-    int min;
-    int hour;
-    int day;
-    int month;
+  int second;
+  int min;
+  int hour;
+  int day;
+  int month;
 }T;
+void updateLastTime(T* lt,TimeM* t){
+  lt->second = t->second;
+  lt->min = t->min;
+  lt->hour = t->hour;
+  lt->day = t->day;
+  lt->month = t->month;
+}
 
-
+//Init object
 Screen screen;
 TimeM timeM;
 Planet earth(ORBIT_RADIU_EARTH,TEMPS_REVOLUTION_EARTH*24);
 Planet moon(ORBIT_RADIU_MOON,TEMPS_REVOLUTION_MOON*24);
 Weather weather;
+
+// prototypes scheduler
+void each_5seconds(bool* refresh);
+void each_30seconds(bool* refresh);
+void each_mins(bool* refresh);
+void each_hours(bool* refresh);
+void each_days(bool* refresh);
 
 
 void setup()
@@ -68,51 +84,26 @@ void setup()
 
 void loop()
 {
-  static T lastT = {-1,-1,-1,-1};
-  static bool pass30s = false;
+  static T lastT = {-1,-1,-1,-1,-1};
   static bool need_refresh = false;
 
+  //update time
   timeM.update_time();
 
   //Each 30s : 
-  if (lastT.min != timeM.min || (timeM.second>=30 && !pass30s)){
+  if (lastT.min != timeM.min || (timeM.second>=30 && lastT.second<30)){
+    each_30seconds(&need_refresh);
     //each minutes
     if(lastT.min != timeM.min ){
-      //clear the screen
-      screen.clear();
-
-      //each hour
+      each_mins(&need_refresh);
+      //each hours
       if(lastT.hour != timeM.hour){
-        //update the weather data
-        weather.get_info();
+        each_hours(&need_refresh);
+        //each days
+        if(lastT.day != timeM.day){
+          each_days(&need_refresh);
+        }
       }
-      
-      //display the weather
-      screen.display_weather(weather.city, weather.temp,weather.sky);
-      //display the time
-      screen.display_time(timeM.min, timeM.hour);
-      //Calculate the position of the planets
-      earth.calculatePos(timeM.day, timeM.month, timeM.hour);
-      earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
-      moon.calculatePos(timeM.day,timeM.month, timeM.hour);
-      moon.addOffset(earth.x,earth.y);
-      //display the planets
-      screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
-      screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
-      screen.display_planet(moon.x,moon.y,5,0);
-      //need full refresh
-      need_refresh = true;
-    }
-
-    //each 30S if where in a +30 situation
-    if (timeM.second>=30){
-      //Display the dot and register
-      pass30s = true;
-      //The "_P" mean that this function refresh by herself a partial part of the screen
-      screen.display_dot_P();
-    }else{
-      //else keep the pass at 0 
-      pass30s = false;
     }
   }
 
@@ -124,10 +115,7 @@ void loop()
   }
   
   //update the lastT
-  lastT.min = timeM.min;
-  lastT.hour = timeM.hour;
-  lastT.day = timeM.day;
-  lastT.month = timeM.month;
+  updateLastTime(&lastT,&timeM);
 
   #if DEV
   //SIMPLE PROCESSOR DELAY (suitable for debug)
@@ -140,4 +128,70 @@ void loop()
   //safe restart
   delay(100);
   #endif
+}
+
+
+/*======== SCHEDULER =========
+*
+*  Each function is called at a precise time
+*  Here to help code reading
+*/
+void each_30seconds(bool* refresh){
+  //Display the dot if where at +30s
+  display_dot_main();
+}
+void each_mins(bool* refresh){
+  //clear the screen
+  screen.clear();
+
+  //redisplay the weather after each clear (WIP)
+  screen.display_weather(weather.city, weather.temp,weather.sky);
+  
+  //display the time
+  screen.display_time(timeM.min, timeM.hour);
+
+  //planets
+  compute_pos_planet_main();
+  display_planet_main();
+
+  //need full refresh
+  *refresh = true;
+}
+void each_hours(bool* refresh){
+    //update the weather data
+    weather.get_info();
+}
+void each_days(bool* refresh){
+
+}
+
+
+/*======== FUNCTUNS TO CLARIFY THE SCHEDULER =========*/
+
+/*====== Planet handeling ======*/
+void compute_pos_planet_main(){
+  earth.calculatePos(timeM.day, timeM.month, timeM.hour);
+  earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
+  moon.calculatePos(timeM.day,timeM.month, timeM.hour);
+  moon.addOffset(earth.x,earth.y);
+}
+void display_planet_main(){
+  screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
+  screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
+  screen.display_planet(moon.x,moon.y,5,0);
+}
+
+/*====== 30s dot handeling =======*/
+void display_dot_main(){
+  static bool dot_displayed = false;
+  //each 30S if where in a +30 situation
+  if (timeM.second>=30){
+    //Display the dot and register
+    dot_displayed = true;
+    //The "_P" mean that this function refresh by herself a partial part of the screen
+    screen.display_dot_P();
+  }else{
+    //else keep the pass at 0 
+    dot_displayed = false;
+  }
 }
