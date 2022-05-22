@@ -2,13 +2,13 @@
 #include "screen.h"
 
 //Librairies import
-#include <GxEPD.h>
-#include <GxGDEW042T2/GxGDEW042T2.h>      // 4.2" b/w display
+#include <GxEPD2_BW.h>
+
+//Fonts
 #include <Fonts/FreeMonoBold24pt7b.h>
 #include <Fonts/FreeMonoBold12pt7b.h>
 #include <Fonts/FreeMonoBold9pt7b.h>
-#include <GxIO/GxIO_SPI/GxIO_SPI.h>
-#include <GxIO/GxIO.h>
+
 
 //Set font sizes
 #define BIG_FONT 3
@@ -16,8 +16,7 @@
 #define SMALL_FONT 1
 
 //Init display gpio pins
-GxIO_Class io(SPI, /*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16); // arbitrary selection of 17, 16
-GxEPD_Class display(io, /*RST=*/ 16, /*BUSY=*/ 4); // arbitrary selection of (16), 4
+GxEPD2_BW<GxEPD2_420, GxEPD2_420::HEIGHT> display(GxEPD2_420(/*CS=5*/ SS, /*DC=*/ 17, /*RST=*/ 16, /*BUSY=*/ 4)); // GDEW042T2
 
 //Constructor
 Screen::Screen(void){
@@ -33,7 +32,7 @@ void Screen::clear(){
     display.fillScreen(GxEPD_WHITE);
 }
 void Screen::apply(){
-    display.update();
+    display.display();
 }
 void Screen::font_size(int size){
     switch(size){
