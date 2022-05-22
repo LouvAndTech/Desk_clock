@@ -10,6 +10,8 @@
 #include "timeMaster.h"
 //Planet calculation
 #include "position.h"
+//weather
+#include "weather.h"
 
 #define BAUDRATE 115200
 #define ORBIT_RADIU_EARTH 60 //in pixel
@@ -17,7 +19,7 @@
 #define TEMPS_REVOLUTION_EARTH 365 //in days
 #define TEMPS_REVOLUTION_MOON 27 //in days
 #define CENTER_PLANET_X 150
-#define CENTER_PLANET_Y 250
+#define CENTER_PLANET_Y 290
 
 const char* ssid       = "Livebox-6858";
 const char* password   = "xVdxfd4CVHGTHD82Hx";
@@ -34,6 +36,7 @@ Screen screen;
 TimeM timeM;
 Planet earth(ORBIT_RADIU_EARTH,TEMPS_REVOLUTION_EARTH*24);
 Planet moon(ORBIT_RADIU_MOON,TEMPS_REVOLUTION_MOON*24);
+Weather weather;
 
 
 void setup()
@@ -77,6 +80,15 @@ void loop()
     if(lastT.min != timeM.min ){
       //clear the screen
       screen.clear();
+
+      //each hour
+      if(lastT.hour != timeM.hour){
+        //update the weather data
+        weather.get_info();
+      }
+      
+      //display the weather
+      screen.display_weather(weather.city, weather.temp,weather.sky);
       //display the time
       screen.display_time(timeM.min, timeM.hour);
       //Calculate the position of the planets

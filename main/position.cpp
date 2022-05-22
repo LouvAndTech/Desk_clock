@@ -1,5 +1,7 @@
 //header file
 #include "position.h"
+//config
+#include "config.h"
 
 #define ANGLE_OFFSET M_PI_2
 
@@ -12,7 +14,7 @@ Planet::Planet(int orbitRadius,int nbHourMax){
     angle = 0;
 }
 
-void Planet::calculatePos(int ,int day, int month,int hour){
+void Planet::calculatePos(int day, int month,int hour){
     #if DEV
     Serial.println("Calculating position...");
     #endif

@@ -1,8 +1,13 @@
 //Header file
 #include "screen.h"
+//config
+#include "config.h"
 
 //Librairies import
 #include <GxEPD2_BW.h>
+
+//Bitmaps (made with : "https://javl.github.io/image2cpp/")
+#include "bitmaps.h"
 
 //Fonts
 #include <Fonts/FreeMonoBold24pt7b.h>
@@ -105,4 +110,22 @@ void Screen::display_planet(int x, int y, int size, int orbit){
     if (orbit){
         display.drawCircle(x, y, orbit, GxEPD_BLACK);
     }
+}
+
+
+void Screen::display_weather(String city, int temp, int weather){
+    //Print the city
+    font_size(MEDIUM_FONT);
+    display.setCursor(display.width()/2, 110);
+    display.print(city);
+    font_size(MEDIUM_FONT);
+    //Print the temperature
+    display.setCursor(display.width()/2+10, 135);
+    display.print(temp);
+    int16_t x1, y1;
+    uint16_t w, h;
+    display.getTextBounds(String(temp),display.width()/2+10, 145, &x1, &y1, &w, &h); //calc width of new string
+    display.drawBitmap(display.width()/2+10+w+10,y1-10,epd_bitmap_wi_celsius,22,20,GxEPD_BLACK);
+    //print the weather icon
+    display.drawBitmap(50, 85, weather_icon[weather], 80,80, GxEPD_BLACK);
 }

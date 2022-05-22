@@ -1,5 +1,6 @@
 //config
 #include "config.h"
+#include "Arduino.h"
 
 #ifndef SCREEN_H
 #define SCREEN_H
@@ -31,6 +32,15 @@ class Screen{
          * @param orbit orbit arounded the planet 0 = none
          */
         void display_planet(int,int,int,int);
+
+        /**
+         * @brief Display the weather
+         * 
+         * @param City 
+         * @param temp 
+         * @param weather 
+         */
+        void display_weather(String,int,int);
         /**
          * @brief Completely clear the screen
          */

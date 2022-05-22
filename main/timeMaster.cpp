@@ -1,5 +1,7 @@
 //Header file
 #include "timeMaster.h"
+//config
+#include "config.h"
 
 
 //Libraries Importing
