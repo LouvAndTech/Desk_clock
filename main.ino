@@ -88,7 +88,7 @@ void loop()
       screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
       screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
       screen.display_planet(moon.x,moon.y,5,0);
-      //apply the buffer onto the screen
+      //need full refresh
       need_refresh = true;
     }
 
@@ -103,6 +103,8 @@ void loop()
       pass30s = false;
     }
   }
+
+  //Apply the changes if needed
   if (need_refresh){
     //apply the buffer onto the screen
     screen.apply();
