@@ -5,7 +5,7 @@
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 
-#define URL_API "http://api.openweathermap.org/data/2.5/weather?q=Angers,FR&APPID=3ca8f1a2235623063f0cd1ef6c1eec4d"
+#define URL_API "http://api.openweathermap.org/data/2.5/weather?q=Angers,FR&units=metric&APPID=3ca8f1a2235623063f0cd1ef6c1eec4d"
 
 Weather::Weather(void){
     city[0] = '\0';
