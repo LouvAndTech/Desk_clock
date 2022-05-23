@@ -4,6 +4,8 @@
 
 //config
 #include "config.h"
+//wifi credential
+#include "credential.h"
 //Screen 
 #include "screen.h"
 //time
@@ -21,8 +23,6 @@
 #define CENTER_PLANET_X 150
 #define CENTER_PLANET_Y 290
 
-const char* ssid       = "Livebox-6858";
-const char* password   = "xVdxfd4CVHGTHD82Hx";
 
 //Save the last Time we pass the boucle
 typedef struct{
