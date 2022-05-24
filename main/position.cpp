@@ -21,7 +21,7 @@ void Planet::calculatePos(int day, int month,int hour){
     //calculate the day of the year
     int doy = dayOfYear(day,month,hour);
     //Calculate the angle with a *100 multiplier
-    angle = (int)(((((doy*24.+hour)/tempsRevolution)*2.*M_PI)+ANGLE_OFFSET)*100);
+    angle = (int)((((((doy*24+hour)%tempsRevolution)*1./tempsRevolution)*2.*M_PI)+ANGLE_OFFSET)*100);
     //Calculate the x and y
     x = (int)(r*cos(angle/100.));
     y = (int)(r*sin(angle/100.));
