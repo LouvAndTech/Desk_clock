@@ -1,4 +1,5 @@
 #include <WiFi.h>
+#include <esp_wifi.h>
 #include "time.h"
 #include "sntp.h"
 
@@ -54,6 +55,7 @@ void each_mins(bool* refresh);
 void each_hours(bool* refresh);
 void each_days(bool* refresh);
 
+const uint8_t MACAddress[] PROGMEM= {0xAC, 0x67, 0xB2, 0x2B, 0x7F, 0x20};
 
 void setup()
 {
@@ -61,23 +63,31 @@ void setup()
   Serial.println("Starting setup...");
 
   //connect to WiFi
+  Serial.print("ESP Board MAC Address:  ");
+  Serial.println(WiFi.macAddress());
   Serial.printf("Connecting to %s ", ssid);
+  esp_wifi_set_mac(WIFI_IF_STA, &MACAddress[0]);
   WiFi.begin(ssid, (password=="")?NULL:password);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");
   }
   Serial.println(" CONNECTED");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
   
   //init servicies
   screen.init(BAUDRATE);
+  weather.init();
 
+  //init time
+  int i = 1;
   timeM.init();
   while(!timeM.update_time()){
-    Serial.println("Initilizing time");
+    Serial.println("Initilizing time, attempt "+String(i));
+    i++;
     delay(500);
   }
-  Serial.println("Time initilized");
 
   Serial.println("Setup done");
 }
@@ -91,7 +101,7 @@ void loop()
   timeM.update_time();
 
   //Each 30s : 
-  if (lastT.min != timeM.min || (timeM.second>=30 && lastT.second<30)){
+  if ((timeM.second>=30 && lastT.second<30)||(timeM.second<30 && lastT.second>=30)||(lastT.second==-1)){
     each_30seconds(&need_refresh);
     //each minutes
     if(lastT.min != timeM.min ){
@@ -170,9 +180,9 @@ void each_days(bool* refresh){
 
 /*====== Planet handeling ======*/
 static void compute_pos_planet_main(){
-  earth.calculatePos(timeM.day, timeM.month, timeM.hour);
+  earth.calculatePos(timeM.day, timeM.month, timeM.hour,timeM.year);
   earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
-  moon.calculatePos(timeM.day,timeM.month, timeM.hour);
+  moon.calculatePos(timeM.day,timeM.month, timeM.hour,timeM.year);
   moon.addOffset(earth.x,earth.y);
 }
 static void display_planet_main(){

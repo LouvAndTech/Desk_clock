@@ -14,12 +14,12 @@ Planet::Planet(int orbitRadius,int nbHourMax){
     angle = 0;
 }
 
-void Planet::calculatePos(int day, int month,int hour){
+void Planet::calculatePos(int day, int month,int hour,int year){
     #if DEV
     Serial.println("Calculating position...");
     #endif
     //calculate the day of the year
-    int doy = dayOfYear(day,month,hour);
+    int doy = dayOfYear(day,month,year);
     //Calculate the angle with a *100 multiplier
     angle = (int)((((((doy*24+hour)%tempsRevolution)*1./tempsRevolution)*2.*M_PI)+ANGLE_OFFSET)*100);
     //Calculate the x and y

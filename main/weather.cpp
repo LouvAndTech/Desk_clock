@@ -13,6 +13,11 @@ Weather::Weather(void){
     temp = 0;
 }
 
+void Weather::init(){
+    //Init the weather
+    get_info();
+}
+
 void Weather::get_info(void){
     update_info();
 }

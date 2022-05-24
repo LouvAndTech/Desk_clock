@@ -24,6 +24,7 @@ TimeM::TimeM(void){
     hour = 0;
     day = 0;
     month = 0;
+    year = 0;
 }
 
 #if DEV
@@ -79,6 +80,7 @@ bool TimeM::update_time(void)
         min = timeinfo.tm_min;
         second = timeinfo.tm_sec;
         month = timeinfo.tm_mon;
+        year = timeinfo.tm_year;
         #if DEV
         Serial.println(&timeinfo, "%A, %B %d %Y %H:%M:%S");
         #endif

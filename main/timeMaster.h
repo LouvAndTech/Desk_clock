@@ -7,6 +7,7 @@
 
 class TimeM{
     public:
+        int year;
         int month;
         int day;
         int min;

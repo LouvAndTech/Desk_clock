@@ -12,7 +12,6 @@ class Planet{
         int y; //hauteur
 
         Planet(int,int);
-
         /**
          * @brief Calculates the position of the planet
          * 
@@ -21,7 +20,7 @@ class Planet{
          * @param month      Month of the year
          * @param hour       Hour of the day
          */
-        void calculatePos(int,int,int);
+        void calculatePos(int,int,int,int);
         void addOffset(int,int);
 
     private:

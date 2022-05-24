@@ -12,7 +12,7 @@ class Weather{
         int temp;
 
         Weather(void);
-
+        void init(void);
         void get_info(void);
 
     private:
