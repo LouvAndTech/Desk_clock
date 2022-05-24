@@ -35,7 +35,11 @@ void Screen::init(int baudrate){
     display.init();
     #endif
     display.setRotation(3); //Portrait mode
+    clear();
+    apply();
     display.setTextColor(GxEPD_BLACK);  //Set color to black cause that's the only one
+    font_size(BIG_FONT);
+
 }
 void Screen::clear(){
     display.fillScreen(GxEPD_WHITE);
@@ -96,6 +100,10 @@ void Screen::display_time(int min, int hour){
 }
 void Screen::display_dot_P(void){
     //The point need to be printed at the right of the clock
+    #if DEV
+    Serial.println("Display dot !");
+    #endif
+    font_size(BIG_FONT);
     int16_t x1, y1;
     uint16_t w, h;
     display.getTextBounds("00:00",display.width()/2,30+24, &x1, &y1, &w, &h); //calc width of new string
