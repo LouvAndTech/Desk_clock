@@ -1,3 +1,5 @@
 .vscode/*
 apiexample.json
 bitmap/*
+credential.h/*
+main/credential.h
