@@ -62,7 +62,7 @@ void setup()
 
   //connect to WiFi
   Serial.printf("Connecting to %s ", ssid);
-  WiFi.begin(ssid, password);
+  WiFi.begin(ssid, (password=="")?NULL:password);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
       Serial.print(".");
@@ -144,15 +144,14 @@ void each_mins(bool* refresh){
   //clear the screen
   screen.clear();
 
-  //redisplay the weather after each clear (WIP)
-  screen.display_weather(weather.city, weather.temp,weather.sky);
-  
   //display the time
   screen.display_time(timeM.min, timeM.hour);
 
-  //planets
-  compute_pos_planet_main();
+  //(WIP) Finding a way to fully refresh only partial part of the screen to avoid redisplaying the whole thing
+  //planets display 
   display_planet_main();
+  //redisplay the weather
+  screen.display_weather(weather.city, weather.temp,weather.sky);
 
   //need full refresh
   *refresh = true;
@@ -160,6 +159,7 @@ void each_mins(bool* refresh){
 void each_hours(bool* refresh){
     //update the weather data
     weather.get_info();
+    compute_pos_planet_main();
 }
 void each_days(bool* refresh){
 
@@ -169,20 +169,20 @@ void each_days(bool* refresh){
 /*======== FUNCTUNS TO CLARIFY THE SCHEDULER =========*/
 
 /*====== Planet handeling ======*/
-void compute_pos_planet_main(){
+static void compute_pos_planet_main(){
   earth.calculatePos(timeM.day, timeM.month, timeM.hour);
   earth.addOffset(CENTER_PLANET_X,CENTER_PLANET_Y);
   moon.calculatePos(timeM.day,timeM.month, timeM.hour);
   moon.addOffset(earth.x,earth.y);
 }
-void display_planet_main(){
+static void display_planet_main(){
   screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
   screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
   screen.display_planet(moon.x,moon.y,5,0);
 }
 
 /*====== 30s dot handeling =======*/
-void display_dot_main(){
+static void display_dot_main(){
   static bool dot_displayed = false;
   //each 30S if where in a +30 situation
   if (timeM.second>=30){
