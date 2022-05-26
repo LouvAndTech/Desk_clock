@@ -3,8 +3,6 @@
 //config
 #include "config.h"
 
-#define ANGLE_OFFSET M_PI_2
-
 //Constructor
 Planet::Planet(int orbitRadius,int nbHourMax){
     r = orbitRadius;

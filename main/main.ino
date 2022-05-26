@@ -16,14 +16,6 @@
 //weather
 #include "weather.h"
 
-#define BAUDRATE 115200
-#define ORBIT_RADIU_EARTH 60 //in pixel
-#define ORBIT_RADIU_MOON 20 //in pixel
-#define TEMPS_REVOLUTION_EARTH 365 //in days
-#define TEMPS_REVOLUTION_MOON 27 //in days
-#define CENTER_PLANET_X 150
-#define CENTER_PLANET_Y 290
-
 
 //Save the last Time we pass the boucle
 typedef struct{
@@ -129,11 +121,11 @@ void loop()
 
   #if DEV
   //SIMPLE PROCESSOR DELAY (suitable for debug)
-  delay(5000);
+  delay(PRECISON_CLOCK);
   #else
   //ESP LIGHT SLEEP MODE (suitable for production)
   //(Slow down the Serial connection and make debug harder)
-  esp_sleep_enable_timer_wakeup(4900 * 1000);
+  esp_sleep_enable_timer_wakeup((PRECISON_CLOCK-100) * 1000);
   esp_light_sleep_start();
   //safe restart
   delay(100);
@@ -148,7 +140,8 @@ void loop()
 */
 void each_30seconds(bool* refresh){
   //Display the dot if where at +30s
-  display_dot_main();
+  screen.display_dot_P();
+  //old way : display_dot_main();
 }
 void each_mins(bool* refresh){
   //clear the screen
@@ -186,9 +179,9 @@ static void compute_pos_planet_main(){
   moon.addOffset(earth.x,earth.y);
 }
 static void display_planet_main(){
-  screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,20,ORBIT_RADIU_EARTH);
-  screen.display_planet(earth.x,earth.y,10,ORBIT_RADIU_MOON);
-  screen.display_planet(moon.x,moon.y,5,0);
+  screen.display_planet(CENTER_PLANET_X,CENTER_PLANET_Y,SIZE_SUN,ORBIT_RADIU_EARTH);
+  screen.display_planet(earth.x,earth.y,SIZE_EARTH,ORBIT_RADIU_MOON);
+  screen.display_planet(moon.x,moon.y,SIZE_MOON,0);
 }
 
 /*====== 30s dot handeling =======*/
