@@ -54,23 +54,28 @@ const uint8_t MACAddress[] PROGMEM= {0xAC, 0x67, 0xB2, 0x2B, 0x7F, 0x20};
 
 void setup()
 {
-  Serial.begin(BAUDRATE);
-  Serial.println("Starting setup...");
+  #if DEV
+    Serial.begin(BAUDRATE);
+    Serial.println("Starting setup...");
 
-  //connect to WiFi
-  Serial.print("ESP Board MAC Address:  ");
-  Serial.println(WiFi.macAddress());
-  Serial.printf("Connecting to %s ", ssid);
+    //connect to WiFi
+    Serial.print("ESP Board MAC Address:  ");
+    Serial.println(WiFi.macAddress());
+    Serial.printf("Connecting to %s ", ssid);
+  #endif
   esp_wifi_set_mac(WIFI_IF_STA, &MACAddress[0]);
   WiFi.begin(ssid, (password=="")?NULL:password);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
-      Serial.print(".");
+      #if DEV
+        Serial.print(".");
+      #endif
   }
-  Serial.println(" CONNECTED");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
-  
+  #if DEV
+    Serial.println(" CONNECTED");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+  #endif
   //init servicies
   screen.init(BAUDRATE);
   weather.init();
@@ -79,14 +84,17 @@ void setup()
   int i = 1;
   timeM.init();
   while(!timeM.update_time()){
+    #if DEV
     Serial.println("Initilizing time, attempt "+String(i));
+    #endif
     i++;
     delay(500);
   }
 
-  Serial.println("Init..");
   init_main();
-  Serial.println("Setup done");
+  #if DEV
+    Serial.println("Setup done");
+  #endif
 }
 
 void loop()
@@ -156,13 +164,17 @@ static void init_main(void){
 *  Here to help code reading
 */
 void each_30seconds(bool* refresh){
-  Serial.println("--- 30 SECONDE ---");
+  #if DEV
+    Serial.println("--- 30 SECONDE ---");
+  #endif
   //Display the dot if where at +30s
   screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
   //old way : display_dot_main();
 }
 void each_mins(bool* refresh){
-  Serial.println("--- MINS ---");
+  #if DEV
+    Serial.println("--- MINS ---");
+  #endif
   //clear the screen
   screen.clear();
 
@@ -182,14 +194,18 @@ void each_mins(bool* refresh){
 }
 
 void each_hours(bool* refresh){
+  #if DEV
     Serial.println("--- HOURS ---");
-    //update the weather data
-    weather.get_info();
-    compute_pos_planet_main();
+  #endif
+  //update the weather data
+  weather.get_info();
+  compute_pos_planet_main();
 }
 
 void each_days(bool* refresh){
-  Serial.println("--- DAYS ---");
+  #if DEV
+    Serial.println("--- DAYS ---");
+  #endif
   //update the daylight
   daylight.calculate_sunRiseSet(timeM.year,timeM.month,timeM.day,DAYLIGHT_LATITUDE,timeM.daylight_saving);
 }

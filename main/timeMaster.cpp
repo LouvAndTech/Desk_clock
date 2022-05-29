@@ -32,7 +32,9 @@ TimeM::TimeM(void){
 // Callback function (get's called when time adjusts via NTP)
 void TimeM::timeavailable(struct timeval *t)
 {   
-    Serial.println("Got time adjustment from NTP!");
+    #if DEV
+        Serial.println("Got time adjustment from NTP!");
+    #endif
 }
 #endif
 

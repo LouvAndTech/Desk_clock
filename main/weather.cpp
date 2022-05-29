@@ -30,7 +30,9 @@ void Weather::update_info(void){
 
   // JSON.typeof(jsonVar) can be used to get the type of the var
   if (JSON.typeof(myObject) == "undefined") {
-    Serial.println("Parsing input failed!");
+    #if DEV
+      Serial.println("Parsing input failed!");
+    #endif
     return;
   }
 
@@ -95,13 +97,17 @@ String Weather::httpGETRequest(const char* serverName) {
   String payload = "{}"; 
   
   if (httpResponseCode>0) {
+    #if DEV
     Serial.print("HTTP Response code: ");
     Serial.println(httpResponseCode);
+    #endif
     payload = http.getString();
   }
   else {
+    #if DEV
     Serial.print("Error code: ");
     Serial.println(httpResponseCode);
+    #endif
   }
   // Free resources
   http.end();

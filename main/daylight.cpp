@@ -96,9 +96,9 @@ void Daylight::calculate_pos(int left_x,int top_y, int width, int height, int ho
     int min_in_day = hour*60+min;
     int x;
     #if DEV
-    Serial.println("Daylight::calculate_pos: ");
-    Serial.println("min_in_day : "+String(min_in_day));
-    Serial.println("sunrise_nbMin = "+String(sunrise_nbMin)+" | sunset_nbMin = "+String(sunset_nbMin));
+        Serial.println("Daylight::calculate_pos: ");
+        Serial.println("min_in_day : "+String(min_in_day));
+        Serial.println("sunrise_nbMin = "+String(sunrise_nbMin)+" | sunset_nbMin = "+String(sunset_nbMin));
     #endif
     if (min_in_day<sunrise_nbMin){ 
         x = (int)((min_in_day*1./sunrise_nbMin)*1.*width/4);
