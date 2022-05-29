@@ -13,6 +13,7 @@ class TimeM{
         int min;
         int hour;
         int second;
+        int daylight_saving;
 
         TimeM(void);
         void init(void);

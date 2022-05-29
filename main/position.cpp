@@ -54,9 +54,9 @@ int Planet::dayOfYear(int day,int month,int year){
     static int dayInMonth[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
     //handle leap year
     if (month==2 && isLeapYear(year)){
-        dayInMonth[2] = 29;
+        dayInMonth[1] = 29;
     }else{
-        dayInMonth[2] = 28;
+        dayInMonth[1] = 28;
     }
     //calculate the day of the year
     int dayOfYear = 0;

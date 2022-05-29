@@ -15,6 +15,8 @@
 #include "position.h"
 //weather
 #include "weather.h"
+//Daylight
+#include "daylight.h"
 
 
 //Save the last Time we pass the boucle
@@ -39,6 +41,7 @@ TimeM timeM;
 Planet earth(ORBIT_RADIU_EARTH,TEMPS_REVOLUTION_EARTH*24);
 Planet moon(ORBIT_RADIU_MOON,TEMPS_REVOLUTION_MOON*24);
 Weather weather;
+Daylight daylight;
 
 // prototypes scheduler
 void each_5seconds(bool* refresh);
@@ -71,7 +74,7 @@ void setup()
   //init servicies
   screen.init(BAUDRATE);
   weather.init();
-
+  
   //init time
   int i = 1;
   timeM.init();
@@ -81,6 +84,8 @@ void setup()
     delay(500);
   }
 
+  Serial.println("Init..");
+  init_main();
   Serial.println("Setup done");
 }
 
@@ -94,19 +99,19 @@ void loop()
 
   //Each 30s : 
   if ((timeM.second>=30 && lastT.second<30)||(timeM.second<30 && lastT.second>=30)||(lastT.second==-1)){
-    each_30seconds(&need_refresh);
     //each minutes
     if(lastT.min != timeM.min ){
-      each_mins(&need_refresh);
       //each hours
       if(lastT.hour != timeM.hour){
-        each_hours(&need_refresh);
         //each days
         if(lastT.day != timeM.day){
           each_days(&need_refresh);
         }
+        each_hours(&need_refresh);
       }
+      each_mins(&need_refresh);
     }
+    each_30seconds(&need_refresh);
   }
 
   //Apply the changes if needed
@@ -132,6 +137,18 @@ void loop()
   #endif
 }
 
+static void init_main(void){
+  static bool need_refresh = false;
+  each_days(&need_refresh);
+  each_hours(&need_refresh);
+  each_mins(&need_refresh);
+  each_30seconds(&need_refresh);
+  if (need_refresh){
+    //apply the buffer onto the screen
+    screen.apply();
+    need_refresh = false;
+  }
+}
 
 /*======== SCHEDULER =========
 *
@@ -139,33 +156,42 @@ void loop()
 *  Here to help code reading
 */
 void each_30seconds(bool* refresh){
+  Serial.println("--- 30 SECONDE ---");
   //Display the dot if where at +30s
-  screen.display_dot_P();
+  screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
   //old way : display_dot_main();
 }
 void each_mins(bool* refresh){
+  Serial.println("--- MINS ---");
   //clear the screen
   screen.clear();
 
   //display the time
-  screen.display_time(timeM.min, timeM.hour);
+  screen.display_time(timeM.min, timeM.hour,CENTER_TIME_X,BOTTOM_TIME_Y);
 
   //(WIP) Finding a way to fully refresh only partial part of the screen to avoid redisplaying the whole thing
   //planets display 
   display_planet_main();
   //redisplay the weather
-  screen.display_weather(weather.city, weather.temp,weather.sky);
+  screen.display_weather(weather.city, weather.temp,weather.sky,CENTER_WEATHER_X,TOP_WEATHER_Y);
+  //redisplay the daylight
+  display_daylight_main();
 
   //need full refresh
   *refresh = true;
 }
+
 void each_hours(bool* refresh){
+    Serial.println("--- HOURS ---");
     //update the weather data
     weather.get_info();
     compute_pos_planet_main();
 }
-void each_days(bool* refresh){
 
+void each_days(bool* refresh){
+  Serial.println("--- DAYS ---");
+  //update the daylight
+  daylight.calculate_sunRiseSet(timeM.year,timeM.month,timeM.day,DAYLIGHT_LATITUDE,timeM.daylight_saving);
 }
 
 
@@ -183,8 +209,15 @@ static void display_planet_main(){
   screen.display_planet(earth.x,earth.y,SIZE_EARTH,ORBIT_RADIU_MOON);
   screen.display_planet(moon.x,moon.y,SIZE_MOON,0);
 }
+static void display_daylight_main(){
+  daylight.calculate_pos(LEFT_DAYLIGHT_X,TOP_DAYLIGHT_Y,WIDTH_DAYLIGHT,HEIGHT_DAYLIGHT,timeM.hour,timeM.min);
+  screen.display_suncourse(LEFT_DAYLIGHT_X,TOP_DAYLIGHT_Y,WIDTH_DAYLIGHT,HEIGHT_DAYLIGHT,daylight.sun_pos_x,daylight.sun_pos_y);
+  screen.display_sun_course_hours(daylight.sunrise_hour, daylight.sunrise_min,LEFT_DAYLIGHT_X+(WIDTH_DAYLIGHT/4),TOP_DAYLIGHT_Y+HEIGHT_DAYLIGHT/2+3);
+  screen.display_sun_course_hours(daylight.sunset_hour, daylight.sunset_min,LEFT_DAYLIGHT_X+(3*WIDTH_DAYLIGHT/4),TOP_DAYLIGHT_Y+HEIGHT_DAYLIGHT/2+3);
+}
 
-/*====== 30s dot handeling =======*/
+
+/*====== 30s dot handeling ======= 
 static void display_dot_main(){
   static bool dot_displayed = false;
   //each 30S if where in a +30 situation
@@ -192,9 +225,9 @@ static void display_dot_main(){
     //Display the dot and register
     dot_displayed = true;
     //The "_P" mean that this function refresh by herself a partial part of the screen
-    screen.display_dot_P();
+    screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
   }else{
     //else keep the pass at 0 
     dot_displayed = false;
   }
-}
+}*/

@@ -8,6 +8,9 @@
 class Screen{
     public:
 
+        int display_width;
+        int display_height;
+
         Screen(void);
         void init(int);
         /**
@@ -15,13 +18,15 @@ class Screen{
          * 
          * @param min 
          * @param hour 
+         * @param center_x
+         * @param center_y 
          */
-        void display_time(int,int);
+        void display_time(int,int,int,int);
 
         /**
          * @brief Add the dot to the screen
          */
-        void display_dot_P(void);
+        void display_dot_P(int,int);
         
         /**
          * @brief add a planet to the screen
@@ -39,8 +44,23 @@ class Screen{
          * @param City 
          * @param temp 
          * @param weather 
+         * @param center_x
+         * @param top_y 
          */
-        void display_weather(String,int,int);
+        void display_weather(String,int,int,int,int);
+
+        /**
+         * @brief Display the sun course
+         * 
+         * @param left_x
+         * @param top_y
+         * @param width
+         * @param height
+         * @param sun_x
+         * @param sun_y 
+         */
+        void display_suncourse(int , int ,int ,int ,int,int);
+
         /**
          * @brief Completely clear the screen
          */
@@ -52,6 +72,7 @@ class Screen{
         void apply();
         void partial_apply(int,int,int,int);
 
+        void display_sun_course_hours(int ,int ,int ,int);
 
     private:
         
@@ -63,6 +84,8 @@ class Screen{
          * @param size The size of the font 1 = smol 2 = medium 3 = big
         */
         void font_size(int);
+
+        void convert_hour_char(char*,int,int);
 
 };
 #endif
