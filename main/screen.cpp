@@ -53,6 +53,8 @@ void Screen::apply(){
 }
 void Screen::partial_apply(int x, int y, int w, int h){
     display.displayWindow(x,y,w,h);
+    //display.displayWindow(x,y,w,h);
+    display.powerOff();
 }
 void Screen::font_size(int size){
     switch(size){
@@ -100,12 +102,16 @@ void Screen::convert_hour_char(char* buffer,int hour,int min){
 //Public Methods :
 
 /*===== Time widget ======*/
-void Screen::display_time(int min, int hour,int center_x,int bottom_y){
+void Screen::display_time_P(int min, int hour,int center_x,int bottom_y){
+    display.fillRect(60,bottom_y-35,display_width-(60*2)+20,42,GxEPD_WHITE);
+    display.displayWindow(60,bottom_y-35,display_width-(60*2)+20,42);
+
     font_size(BIG_FONT);                // set font size
     char buffer[5];
     //Convert to string the clock
     convert_hour_char(buffer,hour,min);
     print_center(buffer,center_x,bottom_y);
+    partial_apply(60,bottom_y-35,display_width-(60*2),42);
 }
 void Screen::display_dot_P(int center_time_x,int bottom_time_y){
     //The point need to be printed at the right of the clock
@@ -119,7 +125,6 @@ void Screen::display_dot_P(int center_time_x,int bottom_time_y){
     display.setCursor(center_time_x+(w/2), bottom_time_y);
     display.print('.');
     partial_apply(center_time_x+(w/2), bottom_time_y,20,20);
-    display.powerOff();
 }
 
 /*==== Planet widget =====*/

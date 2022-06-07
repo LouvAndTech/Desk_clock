@@ -21,7 +21,7 @@ class Screen{
          * @param center_x
          * @param center_y 
          */
-        void display_time(int,int,int,int);
+        void display_time_P(int,int,int,int);
 
         /**
          * @brief Add the dot to the screen

@@ -61,15 +61,30 @@ void setup()
     //connect to WiFi
     Serial.print("ESP Board MAC Address:  ");
     Serial.println(WiFi.macAddress());
-    Serial.printf("Connecting to %s ", ssid);
   #endif
+  
+  //Set a fix mac adress
   esp_wifi_set_mac(WIFI_IF_STA, &MACAddress[0]);
-  WiFi.begin(ssid, (password=="")?NULL:password);
+
+  //Connect to wifi
+  int attempt = 0;
+  int cred = 0;
+  int nb_credentials = sizeof(credentials)/sizeof(Credential);
+  WiFi.begin(credentials[0].ssid, (credentials[0].password=="")?NULL:credentials[0].password);
+  Serial.printf("\nConnecting to %s ", credentials[0].ssid);
   while (WiFi.status() != WL_CONNECTED) {
       delay(500);
+      attempt++;
       #if DEV
         Serial.print(".");
       #endif
+      if (!(attempt%15)){
+        cred = (cred<nb_credentials-1)?cred+1:0;
+        WiFi.begin(credentials[cred].ssid, (credentials[cred].password=="")?NULL:credentials[cred].password);
+        #if DEV
+          Serial.printf("\nConnecting to %s ", credentials[(attempt%nb_credentials)+1].ssid);
+        #endif
+      }
   }
   #if DEV
     Serial.println(" CONNECTED");
@@ -168,38 +183,38 @@ void each_30seconds(bool* refresh){
     Serial.println("--- 30 SECONDE ---");
   #endif
   //Display the dot if where at +30s
-  screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
-  //old way : display_dot_main();
+  if (timeM.second>=30)
+    screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
+  //display_dot_main();
 }
 void each_mins(bool* refresh){
   #if DEV
     Serial.println("--- MINS ---");
   #endif
-  //clear the screen
-  screen.clear();
-
   //display the time
-  screen.display_time(timeM.min, timeM.hour,CENTER_TIME_X,BOTTOM_TIME_Y);
-
-  //(WIP) Finding a way to fully refresh only partial part of the screen to avoid redisplaying the whole thing
-  //planets display 
-  display_planet_main();
-  //redisplay the weather
-  screen.display_weather(weather.city, weather.temp,weather.sky,CENTER_WEATHER_X,TOP_WEATHER_Y);
-  //redisplay the daylight
-  display_daylight_main();
-
-  //need full refresh
-  *refresh = true;
+  screen.display_time_P(timeM.min, timeM.hour,CENTER_TIME_X,BOTTOM_TIME_Y);
 }
 
 void each_hours(bool* refresh){
   #if DEV
     Serial.println("--- HOURS ---");
   #endif
+  //clear the screen
+  screen.clear();
+
+  //planets display 
+  compute_pos_planet_main();
+  display_planet_main();
+
   //update the weather data
   weather.get_info();
-  compute_pos_planet_main();
+  screen.display_weather(weather.city, weather.temp,weather.sky,CENTER_WEATHER_X,TOP_WEATHER_Y);
+
+  //redisplay the daylight
+  display_daylight_main();
+
+  //need full refresh
+  *refresh = true;
 }
 
 void each_days(bool* refresh){
@@ -233,17 +248,18 @@ static void display_daylight_main(){
 }
 
 
-/*====== 30s dot handeling ======= 
+/*====== 30s dot handeling =======*/
 static void display_dot_main(){
-  static bool dot_displayed = false;
+  //static bool dot_displayed = false;
   //each 30S if where in a +30 situation
   if (timeM.second>=30){
     //Display the dot and register
-    dot_displayed = true;
+    //dot_displayed = true;
     //The "_P" mean that this function refresh by herself a partial part of the screen
     screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
   }else{
     //else keep the pass at 0 
-    dot_displayed = false;
+    //dot_displayed = false;
+    screen.display_dot_P(CENTER_TIME_X,BOTTOM_TIME_Y);
   }
-}*/
+}
