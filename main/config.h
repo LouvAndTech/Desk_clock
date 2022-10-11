@@ -1,5 +1,5 @@
 //CONFIG
-#define DEV 0
+#define DEV 1
 #define BAUDRATE 115200
 //The smaller the more accurate but the less battery life
 #define PRECISON_CLOCK 5000 //in second

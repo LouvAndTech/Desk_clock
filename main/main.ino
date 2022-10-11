@@ -193,6 +193,9 @@ void each_mins(bool* refresh){
   #endif
   //display the time
   screen.display_time_P(timeM.min, timeM.hour,CENTER_TIME_X,BOTTOM_TIME_Y);
+  if (timeM.min%10==0){
+    screen.apply();
+  }
 }
 
 void each_hours(bool* refresh){

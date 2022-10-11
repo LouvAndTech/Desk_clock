@@ -170,7 +170,7 @@ void Screen::display_suncourse(int left_x, int top_y,int width,int height,int su
 }
 
 void Screen::display_sun_course_hours(int hour,int min,int center_x ,int top_y){
-    char buffer[5];
+    char buffer[5] = "\0";
     convert_hour_char(buffer,hour,min);
     font_size(SMALL_FONT);
     display.drawLine(center_x,top_y-3,center_x,top_y+7,GxEPD_BLACK);
