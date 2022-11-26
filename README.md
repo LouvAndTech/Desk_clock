@@ -15,8 +15,8 @@ Or even better fork it and make a pull request.
 ## features
 - It show the position of the earth and moon relative to the time of the year 
     *(not real position in space)*
-- It shows the Time... wich is a good function for a clock
-- It shows the weather at you place
+- It shows the Time... wich is a good feature for a clock
+- It shows the weather at your place
 - It shows the time of sunrise and sunset, with a little animation throughout the day
 
 ## Reproduce :
@@ -26,9 +26,12 @@ You can totally reproduce this project for yourself !
 #### <ins>Hardware :
 - ESP32
 - e-paper display
+- the IDE arduino
 
 *The e-paper display that i use is a GDEW042T2, you can find it from Good Display or waveshare.
 it's not mandatory, but you'll propably need to tinker a bit if you choose another one.*
+
+*You'll probably need some librairies, you can find them all in the arduino librairies manager.*
 
 #### <ins>Software :
 
