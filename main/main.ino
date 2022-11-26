@@ -54,6 +54,10 @@ const uint8_t MACAddress[] PROGMEM= {0xAC, 0x67, 0xB2, 0x2B, 0x7F, 0x20};
 
 void setup()
 {
+
+  //Set a fix mac adress
+  esp_wifi_set_mac(WIFI_IF_STA, &MACAddress[0]);
+
   #if DEV
     Serial.begin(BAUDRATE);
     Serial.println("Starting setup...");
@@ -63,34 +67,37 @@ void setup()
     Serial.println(WiFi.macAddress());
   #endif
   
-  //Set a fix mac adress
-  esp_wifi_set_mac(WIFI_IF_STA, &MACAddress[0]);
-
   //Connect to wifi
   int attempt = 0;
   int cred = 0;
   int nb_credentials = sizeof(credentials)/sizeof(Credential);
-  WiFi.begin(credentials[0].ssid, (credentials[0].password=="")?NULL:credentials[0].password);
-  Serial.printf("\nConnecting to %s ", credentials[0].ssid);
-  while (WiFi.status() != WL_CONNECTED) {
-      delay(500);
+  #if DEV
+    Serial.printf("\nYou have : %d credentials to test.", nb_credentials);
+  #endif
+  
+  WiFi.mode(WIFI_STA);
+
+  do {
+      if (!(attempt%10)){
+        WiFi.begin(credentials[cred].ssid, (credentials[cred].password=="")?NULL:credentials[cred].password);
+        #if DEV
+          Serial.printf("\nConnecting to %s ", credentials[cred].ssid);
+        #endif
+        cred = (cred<nb_credentials-1)? cred+1:0 ;
+      }
+      delay(1000);
       attempt++;
       #if DEV
         Serial.print(".");
       #endif
-      if (!(attempt%15)){
-        cred = (cred<nb_credentials-1)?cred+1:0;
-        WiFi.begin(credentials[cred].ssid, (credentials[cred].password=="")?NULL:credentials[cred].password);
-        #if DEV
-          Serial.printf("\nConnecting to %s ", credentials[(attempt%nb_credentials)+1].ssid);
-        #endif
-      }
-  }
+  } while (WiFi.status() != WL_CONNECTED);
+  
   #if DEV
     Serial.println(" CONNECTED");
     Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
   #endif
+  
   //init servicies
   screen.init(BAUDRATE);
   weather.init();
@@ -155,7 +162,7 @@ void loop()
   //(Slow down the Serial connection and make debug harder)
   esp_sleep_enable_timer_wakeup((PRECISON_CLOCK-100) * 1000);
   esp_light_sleep_start();
-  //safe restart
+  //safe wake-up
   delay(100);
   #endif
 }

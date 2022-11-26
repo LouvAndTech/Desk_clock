@@ -328,10 +328,10 @@ const unsigned char epd_bitmap_wi_day_sunny [] PROGMEM = {
 // Array of all bitmaps for convenience. (Total bytes used to store images in PROGMEM = 2576)
 const int weather_icon_len = 6;
 const unsigned char* weather_icon[6] = {
-	epd_bitmap_wi_day_sunny,
-    epd_bitmap_wi_day_cloudy,
-	epd_bitmap_wi_day_lightning,
-    epd_bitmap_wi_day_showers,
-	epd_bitmap_wi_day_rain,
-	epd_bitmap_wi_day_snow_wind,
+	epd_bitmap_wi_day_sunny, //Full sun -> Sunny
+  epd_bitmap_wi_day_cloudy, //Two litle cloud -> Cludy
+	epd_bitmap_wi_day_lightning,  //Ligthning out of a cloud -> Thunderstorm
+  epd_bitmap_wi_day_showers,  //Cloud with litle rain -> showers 
+	epd_bitmap_wi_day_rain, //Cloud with rain -> Heavy rain
+	epd_bitmap_wi_day_snow_wind,  //Cloud with snow flake -> Snow
 };

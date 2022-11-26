@@ -1,5 +1,7 @@
+#include "credential.h"
+
 //CONFIG
-#define DEV 1
+#define DEV 1 //1 if dev mode 0 production mode
 #define BAUDRATE 115200
 //The smaller the more accurate but the less battery life
 #define PRECISON_CLOCK 5000 //in second
@@ -39,12 +41,23 @@
 //The weather widget is a small widget that display the weather
 #define CENTER_WEATHER_X 150   //in pixels
 #define TOP_WEATHER_Y 220   //in pixels
-//define the URL to request
-#define WEATHER_CITY "Angers"
-#define WEATHER_CONTRY "FR"
-#define WEATHER_APIKEY "3ca8f1a2235623063f0cd1ef6c1eec4d"
-#define URL_API "http://api.openweathermap.org/data/2.5/weather?q=" WEATHER_CITY "," WEATHER_CONTRY "&units=metric&APPID=" WEATHER_APIKEY
-//#define URL_API "http://api.openweathermap.org/data/2.5/weather?q=Angers,FR&units=metric&APPID=3ca8f1a2235623063f0cd1ef6c1eec4d"
+//define the URL to request :
+#define WEATHER_APIKEY WEATHER_TOKEN
+//USING Open weather API USE THIS : 
+#define OPEN_WEATHER 0
+//USING meteo-concept (FRANCE ONLY !):
+#define METEO_CONCEPT 1
+//Complete the following : 
+#if OPEN_WEATHER
+  #define WEATHER_CITY "Angers"
+  #define WEATHER_CONTRY "FR"
+  #define URL_API "http://api.openweathermap.org/data/2.5/weather?q=" WEATHER_CITY "," WEATHER_CONTRY "&units=metric&APPID=" WEATHER_APIKEY
+#endif
+#if METEO_CONCEPT
+  #define INSEE "49007"
+  //#define URL_API "https://api.meteo-concept.com/api/forecast/nextHours?token=ded88ba91977875b8a824fd96f3bc21a104f517a394fb34e4e66196aa84f948c&insee=49007"
+  #define URL_API "https://api.meteo-concept.com/api/forecast/nextHours?insee=" INSEE "&token=" WEATHER_APIKEY
+#endif
 
 
 /*==== Daylight widget ====*/

@@ -52,7 +52,7 @@ void TimeM::init(void){
      * NOTE: configTime() function call if made AFTER DHCP-client run
      * will OVERRIDE aquired NTP server address
      */
-    sntp_servermode_dhcp(1);    // (optional)
+    //sntp_servermode_dhcp(1);    // (optional)
 
     /**
      * This will set configured ntp servers and constant TimeZone/daylightOffset

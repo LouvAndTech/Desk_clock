@@ -32,7 +32,10 @@ Screen::Screen(void){
 //Private Methods :
 void Screen::init(int baudrate){
     #if DEV
-    display.init(baudrate); // enable diagnostic output on Serial
+    //!\ WARNING : THIS COMMAND ISN'T WORKING ANYMORE 
+    //display.init(baudrate); // enable diagnostic output on Serial 
+    //INSTEAD USE A NORMAL INIT
+    display.init();
     #else
     display.init();
     #endif
@@ -152,6 +155,9 @@ void Screen::display_weather(String city, int temp, int weather, int center_x, i
     display.getTextBounds(String(temp),center_x+10, top_y+60, &x1, &y1, &w, &h); //calc width of new string
     display.drawBitmap(x1+w+10, top_y+30,epd_bitmap_wi_celsius,22,20,GxEPD_BLACK);
     //print the weather icon
+    #if DEV
+    Serial.println("Weather be like : "+weather);
+    #endif
     display.drawBitmap(center_x-100, top_y, weather_icon[weather], 80,80, GxEPD_BLACK);
 }
 
