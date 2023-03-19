@@ -100,6 +100,8 @@ void setup()
   
   //init servicies
   screen.init(BAUDRATE);
+  screen.clear();
+  screen.apply();
   weather.init();
   
   //init time

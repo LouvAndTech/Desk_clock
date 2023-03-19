@@ -18,6 +18,7 @@
 //The time widget is a small widget that display the time
 #define CENTER_TIME_X 150  //in pixels
 #define BOTTOM_TIME_Y 215  //in pixels
+#define TIME_ZONE "CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00"; //Time zone for the clock
 
 
 /*==== Planet widget ==== */
@@ -55,7 +56,6 @@
 #endif
 #if METEO_CONCEPT
   #define INSEE "49007"
-  //#define URL_API "https://api.meteo-concept.com/api/forecast/nextHours?token=ded88ba91977875b8a824fd96f3bc21a104f517a394fb34e4e66196aa84f948c&insee=49007"
   #define URL_API "https://api.meteo-concept.com/api/forecast/nextHours?insee=" INSEE "&token=" WEATHER_APIKEY
 #endif
 
