@@ -1,5 +1,5 @@
 //Header file
-#include "screen.h"
+#include "screen.hpp"
 //config
 #include "config.h"
 

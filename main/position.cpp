@@ -1,5 +1,5 @@
 //header file
-#include "position.h"
+#include "position.hpp"
 //config
 #include "config.h"
 

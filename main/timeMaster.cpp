@@ -1,5 +1,5 @@
 //Header file
-#include "timeMaster.h"
+#include "timeMaster.hpp"
 //config
 #include "config.h"
 

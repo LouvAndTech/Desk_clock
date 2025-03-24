@@ -1,5 +1,5 @@
 //header file
-#include "weather.h"
+#include "weather.hpp"
 
 Weather::Weather(void){
     city[0] = '\0';

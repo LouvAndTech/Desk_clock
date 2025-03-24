@@ -8,15 +8,15 @@
 //wifi credential
 #include "credential.h"
 //Screen 
-#include "screen.h"
+#include "screen.hpp"
 //time
-#include "timeMaster.h"
+#include "timeMaster.hpp"
 //Planet calculation
-#include "position.h"
+#include "position.hpp"
 //weather
-#include "weather.h"
+#include "weather.hpp"
 //Daylight
-#include "daylight.h"
+#include "daylight.hpp"
 
 
 //Save the last Time we pass the boucle
