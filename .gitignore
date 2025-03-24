@@ -1,5 +1,16 @@
+# IDE - VSCode
 .vscode/*
+
+# Private files
+.private/
+
+# Credentials
+credential.h
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Legacy ignore 
 apiexample.json
 bitmap/*
-credential.h/*
-main/credential.h
