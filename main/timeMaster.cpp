@@ -1,13 +1,13 @@
 //Header file
 #include "timeMaster.hpp"
 //config
-#include "config.h"
+#include "config.hpp"
 
 
 //Libraries Importing
 #include "time.h"
 #include "sntp.h"
-#include "config.h"
+#include "config.hpp"
 
 static const char* ntpServer1 = "fr.pool.ntp.org";
 static const char* ntpServer2 = "ntp.sophia.mines-paristech.fr";

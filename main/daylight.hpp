@@ -1,5 +1,5 @@
 //config
-#include "config.h"
+#include "config.hpp"
 #include "Arduino.h"
 #include <cmath>
 

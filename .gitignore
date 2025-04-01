@@ -5,7 +5,7 @@
 .private/
 
 # Credentials
-credential.h
+credential.hpp
 
 # OS specific files
 .DS_Store

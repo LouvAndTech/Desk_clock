@@ -4,9 +4,9 @@
 #include "sntp.h"
 
 //config
-#include "config.h"
+#include "config.hpp"
 //wifi credential
-#include "credential.h"
+#include "credential.hpp"
 //Screen 
 #include "screen.hpp"
 //time

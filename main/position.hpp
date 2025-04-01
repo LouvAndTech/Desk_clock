@@ -1,7 +1,7 @@
 #include "Arduino.h"
 #include <cmath>
 //config
-#include "config.h"
+#include "config.hpp"
 
 #ifndef POSITION_H
 #define POSITION_H

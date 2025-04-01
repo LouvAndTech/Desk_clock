@@ -12,7 +12,7 @@ const Credential credentials[6] = {
     {"SSID_4","PASSWORD_4"}
 };
 
-//You need to configure wich api you're using in the "config.h"
+//You need to configure wich api you're using in the "config.hpp"
 #define WEATHER_TOKEN "YOUR_API_TOKEN"
 
 #endif

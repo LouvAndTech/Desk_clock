@@ -1,13 +1,13 @@
 //Header file
 #include "screen.hpp"
 //config
-#include "config.h"
+#include "config.hpp"
 
 //Librairies import
 #include <GxEPD2_BW.h>
 
 //Bitmaps (made with : "https://javl.github.io/image2cpp/")
-#include "bitmaps.h"
+#include "bitmaps.hpp"
 
 //Fonts
 #include <Fonts/FreeMonoBold24pt7b.h>

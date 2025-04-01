@@ -1,7 +1,7 @@
 //header file
 #include "position.hpp"
 //config
-#include "config.h"
+#include "config.hpp"
 
 //Constructor
 Planet::Planet(int orbitRadius,int nbHourMax){

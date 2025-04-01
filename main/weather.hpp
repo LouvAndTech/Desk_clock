@@ -1,6 +1,6 @@
 #include "Arduino.h"
 //config
-#include "config.h"
+#include "config.hpp"
 
 //libraries
 #include <HTTPClient.h>

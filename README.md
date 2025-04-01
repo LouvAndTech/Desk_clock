@@ -36,12 +36,12 @@ it's not mandatory, but you'll propably need to tinker a bit if you choose anoth
 #### <ins>Software :
 
 ##### - <ins>Mandatory :
-In the project you'll find a `config.h` file, you'll need to choose an weather api between the two supported by this project. Their is Meteo_concept and OpenWeatherMap.
+In the project you'll find a `config.hpp` file, you'll need to choose an weather api between the two supported by this project. Their is Meteo_concept and OpenWeatherMap.
 they are both free, but OpenWeatherMap is worldwide, while Meteo_concept is only in France.
 
-You'll need to create an account on the website of the api you choose, and get an api key. Then you'll need to put it in the `credential.h` file.
+You'll need to create an account on the website of the api you choose, and get an api key. Then you'll need to put it in the `credential.hpp` file.
 
-The 'credential.h' file is also where you need to put you wifi credentials.
+The 'credential.hpp' file is also where you need to put you wifi credentials.
 This file is not in the repo, but you'll find a 'credential_template.h'. It should look like this :
 
 ```c
@@ -61,14 +61,14 @@ const Credential credentials[6] = {
     {"SSID_4","PASSWORD_4"}
 };
 
-//You need to configure wich api you're using in the "config.h"
+//You need to configure wich api you're using in the "config.hpp"
 #define WEATHER_TOKEN "YOUR_API_TOKEN"
 
 #endif
 ```
 
 ##### - <ins>Optional :
-You will also find all the widgets position in the `config.h` file. You can change them if you want.
+You will also find all the widgets position in the `config.hpp` file. You can change them if you want.
 
 You can also change the 
 ```c

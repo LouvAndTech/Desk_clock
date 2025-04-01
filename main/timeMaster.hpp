@@ -1,6 +1,6 @@
 #include "Arduino.h"
 //config
-#include "config.h"
+#include "config.hpp"
 
 #ifndef TIMEMASTER_H
 #define TIMEMASTER_H
